@@ -92,7 +92,7 @@ class tree
 			delete(temp1);
 		}
 	}
-	public void LowestCommonBoss(String S,String S_)
+	public String LowestCommonBoss(String S,String S_)
 	{
 		try
 		{
@@ -115,7 +115,7 @@ class tree
 				if(temp1.parent.name.equals(temp2.parent.name))
 				{
 					c=false;
-					System.out.println(temp1.parent.name);
+					return temp1.parent.name;
 				}
 				else
 				{
@@ -129,22 +129,25 @@ class tree
 			System.out.println(f);
 			System.exit(0);
 		}
+		return " ";
 
 	}
-	public void PrintEmployees()
+	public Queue<String> PrintEmployees()
 	{
 		Queue<node> q = new LinkedList<>();
+		Queue<node> q_out = new LinkedList<>();
 		q.add(root);
 		while(q.size()>0)
 		{
 			node temp;
 			temp=q.remove();
-			System.out.println(temp.name);
+			q_out.add(temp.name);
 			for(int i=0; i<temp.children.size(); i++)
 			{
 				q.add(temp.children.get(i));
 			}
 		}
+		return q_out;
 	}
 	void delete(node temp)
 	{
@@ -234,40 +237,38 @@ class bst
 		{	
 			return root;
 		}
- 
-        if(S.compareTo(root.name)<0) 
+		if(S.compareTo(root.name)<0) 
 		{
-            root.left=delete(S, root.left);
-        } 
+		    root.left=delete(S, root.left);
+		} 
 		else if(S.compareTo(root.name)>0) 
 		{
-            root.right=delete(S, root.right);
+        	    root.right=delete(S, root.right);
 		} 
 		else 
 		{
-            if(root.left==null && root.right==null)
+            		if(root.left==null && root.right==null)
 			{
-                return null;
-            } 
+               			 return null;
+            		} 
 			else if(root.left==null) 
 			{
-                return root.right;
-            } 
+                		return root.right;
+            		} 
 			else if(root.right==null) 
 			{
-                return root.left;
-            } 
+                	return root.left;
+            		} 
 			else 
 			{
 				node_bst temp=minNode(root.right);
-                root.name=temp.name;
+                		root.name=temp.name;
 				root.nodeMainTree=temp.nodeMainTree;
-                root.right=delete(temp.name, root.right);
-            }
-        }
+                		root.right=delete(temp.name, root.right);
+            		}
+        	}
  
-        return root;
-		
+        	return root;	
 	}
 	node_bst minNode(node_bst root)
 	{
@@ -373,6 +374,12 @@ public class assignment2
 			FileInputStream fstream = new FileInputStream("simpletestinput.txt");
 			Scanner s = new Scanner(fstream);
 			
+			PrintWriter pw = new PrintWriter("out.txt");
+			pw.close();
+				
+			FileOutputStream fs = new FileOutputStream("out.txt",true); 
+			PrintStream p = new PrintStream(fs);
+			
 			int n=Integer.parseInt(s.nextLine());
 			String[] st=s.nextLine().split(" ");
 			tree employees=new tree(st[1]);
@@ -397,11 +404,16 @@ public class assignment2
 				}
 				else if(op==2)
 				{
-					employees.LowestCommonBoss(stri[1],stri[2]);
+					p.println(employees.LowestCommonBoss(stri[1],stri[2]));
 				}	
 				else
 				{
-					employees.PrintEmployees();
+					Queue<String> q_out = new LinkedList<>();
+					q_out=employees.PrintEmployees();
+					while(q_out.size()>0)
+					{
+						p.println(q_out.remove());
+					}
 				}
 			}
 			
