@@ -325,6 +325,7 @@ class node
 		for(int i=0; i<s.size();i++)
 		{
 			this.children.add(s.get(i));
+			s.get(i).parent=this;
 		}
 	}
 }
